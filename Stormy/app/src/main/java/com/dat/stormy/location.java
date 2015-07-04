@@ -13,18 +13,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 
 public class location extends Activity {
@@ -39,7 +30,7 @@ public class location extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
-        mLocation = (EditText) findViewById(R.id.editText);
+        mLocation = (EditText) findViewById(R.id.editTextLocation);
         mButtonSearch = (Button) findViewById(R.id.btnSearch);
         mButtonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,6 +39,7 @@ public class location extends Activity {
                 if (namePlace.equals(""))
                     Toast.makeText(location.this, "Please input name of place!", Toast.LENGTH_LONG).show();
                 else {
+
                     final String key = String.format(GET_LONG_LAT, namePlace).replace(" ", "%20");
                     runOnUiThread(new Runnable() {
                         @Override
@@ -84,14 +76,15 @@ public class location extends Activity {
             String url = mGetXml.getXmlFromUrl(params[0]);
             return url;
         }
+
         protected void onPostExecute(String s) {
             String address = GetLongLatFromAddress(s);
-            /*Intent intent = new Intent(location.this, MainActivity.class);
+            Intent intent = new Intent(location.this, MainActivity.class);
             intent.putExtra(ADDRESS, address);
-            startActivity(intent);*/
-            Toast.makeText(getApplicationContext(),address,Toast.LENGTH_SHORT).show();
+            startActivity(intent);
         }
     }
+
     private boolean isNetworkAvailable() {
         ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();
@@ -101,7 +94,6 @@ public class location extends Activity {
         }
         return isAvailable;
     }
-
 
 
 }
