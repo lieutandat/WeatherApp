@@ -10,7 +10,7 @@ public class WeatherForFiveDay {
     //object -> city (name, country, coord, populcation)
     private String  mLocation;
     private String mCountry;
-    private List mFiveDayDataSets;
+    private List<FiveDayDataSet> mFiveDayDataSets;
 
     public String getLocation() {
         return mLocation;
@@ -20,11 +20,11 @@ public class WeatherForFiveDay {
         mLocation = location;
     }
 
-    public List getFiveDayDataSets() {
+    public List<FiveDayDataSet> getFiveDayDataSets() {
         return mFiveDayDataSets;
     }
 
-    public void setFiveDayDataSets(List fiveDayDataSets) {
+    public void setFiveDayDataSets(List<FiveDayDataSet> fiveDayDataSets) {
         mFiveDayDataSets = fiveDayDataSets;
     }
 

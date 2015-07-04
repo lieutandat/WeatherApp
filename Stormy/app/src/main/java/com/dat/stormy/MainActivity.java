@@ -23,6 +23,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.Highlight;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -36,6 +40,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -58,14 +63,12 @@ public class MainActivity extends Activity {
     final String CONDITION_ADDRESS = "ADDRESS";
     final String CONDITION_FORECAST = "FORECAST";
 
-    @InjectView(R.id.GoButton) ImageView mGoButton;
     @InjectView(R.id.timeLabel) TextView mTimeLabel;
     @InjectView(R.id.temperatureLabel) TextView mTemperatureValue;
     @InjectView(R.id.humidityValue) TextView mHumidityLabel;
     @InjectView(R.id.precipValue) TextView mPercipValue;
     @InjectView(R.id.summaryLabel) TextView mSummaryLabel;
     @InjectView(R.id.iconImageView) ImageView mIconImageView;
-    @InjectView(R.id.LocationEditText) TextView mLocationValue;
     @InjectView(R.id.locationLabel) TextView mLocationlabel;
     @InjectView(R.id.Chart)   LineChart mChart;
 
@@ -89,13 +92,6 @@ public class MainActivity extends Activity {
         }
 
         GetForeCast(latitude,longtitude);
-
-        mGoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               GoOnClick();
-            }
-        });
     }
 
     // get GPS Long/Lat at Current Place
@@ -131,21 +127,6 @@ public class MainActivity extends Activity {
         };
         lm.requestLocationUpdates(provider, 2000, 10, locationListener);
         return currentLocation[0];
-    }
-
-    private void GoOnClick(){
-        String namePlace = mLocationValue.getText().toString();
-        if(namePlace.equals(""))
-            Toast.makeText(MainActivity.this,"Please input name of place!",Toast.LENGTH_LONG).show();
-        else {
-            final String key = String.format(GET_LONG_LAT, namePlace).replace(" ", "%20");
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    new LoadWebBody().execute(CONDITION_ADDRESS, key);
-                }
-            });
-        }
     }
 
     //Get the Forecast from API
@@ -191,23 +172,25 @@ public class MainActivity extends Activity {
                 try {
                     final WeatherForFiveDay weatherForFiveDay = ExtractValueFromJsonFiveDay(s);
                     Log.d(TAG, "LoadWebBody : " + weatherForFiveDay.getFiveDayDataSets().size());
+                    updateDisplayOpen(weatherForFiveDay.getCountry() + "/" + weatherForFiveDay.getLocation(), weatherForFiveDay.getFiveDayDataSets().get(0));
                     CreateChart(weatherForFiveDay);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-            else{
-
-            }
         }
     }
 
-    private void updateDisplayOpen(CurrentWeatherOpen weatherOpen) {
+    private void updateDisplayOpen(String location,FiveDayDataSet weatherOpen) {
         mTemperatureValue.setText(weatherOpen.getTemperature() + "");
-        mTimeLabel.setText("At "+weatherOpen.getTime()+" it will be");
-        mLocationlabel.setText(weatherOpen.getLocation());
-        mHumidityLabel.setText(weatherOpen.getHumidity() + "");
-        mPercipValue.setText(weatherOpen.getRain() + "");
+        Date date = weatherOpen.getTime();
+        String hour = new SimpleDateFormat("hh:mm a").format(date);
+        mTimeLabel.setText("At "+date.getDate()+"/"+(date.getMonth()+1)
+                +" "+ hour+" it will be");
+        mLocationlabel.setText(location);
+        mHumidityLabel.setText((int)weatherOpen.getHumidity() + " %");
+        double rain = weatherOpen.getRain() * 100;
+        mPercipValue.setText(((float)Math.round(rain)/100) + " mm");
         mSummaryLabel.setText(weatherOpen.getWeatherDescription());
         mIconImageView.setImageDrawable(getResources().getDrawable(weatherOpen.getWeatherIconId()));
     }
@@ -275,11 +258,9 @@ public class MainActivity extends Activity {
 
         try {
             if (jsonObject != null) {
-                if (jsonObject.has("name")) {
-                    weatherForFiveDay.setLocation(jsonObject.getString("name"));
-                }
-                if (jsonObject.has("country")) {
-                    weatherForFiveDay.setCountry(jsonObject.getString("country"));
+                if (jsonObject.has("city")) {
+                    weatherForFiveDay.setLocation(jsonObject.getJSONObject("city").getString("name"));
+                    weatherForFiveDay.setCountry(jsonObject.getJSONObject("city").getString("country"));
                 }
 
                 JSONArray jsonArray = jsonObject.getJSONArray("list");
@@ -314,6 +295,9 @@ public class MainActivity extends Activity {
                             data.setWindSpeed(wind.getDouble("speed"));
                             data.setWindDeg(wind.getDouble("deg"));
                         }
+                        if(object.has("rain")){
+                            data.setRain(object.getJSONObject("rain").getDouble("3h"));
+                        }
                         if (object.has("dt_txt")) {
                             data.setTime(object.getString("dt_txt"));
                         }
@@ -338,8 +322,8 @@ public class MainActivity extends Activity {
         return weatherForFiveDay;
     }
 
-    private void CreateChart(WeatherForFiveDay weatherForFiveDay) {
-        List<FiveDayDataSet> dataSets = weatherForFiveDay.getFiveDayDataSets();
+    private void CreateChart(final WeatherForFiveDay weatherForFiveDay) {
+        final List<FiveDayDataSet> dataSets = weatherForFiveDay.getFiveDayDataSets();
 
         float[] temperatures = new float[5];
         String[] labelTemperatures = new String[5];
@@ -353,6 +337,17 @@ public class MainActivity extends Activity {
         DrawChart drawChart = new DrawChart(mChart,MainActivity.this,temperatures,labelTemperatures);
 
         drawChart.StartDraw();
+
+        mChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry entry, int i, Highlight highlight) {
+                updateDisplayOpen(weatherForFiveDay.getCountry()+"/"+weatherForFiveDay.getLocation(),dataSets.get(entry.getXIndex()));
+                //Toast.makeText(MainActivity.this,"data : entry "+entry.toString()+" i "+i,Toast.LENGTH_LONG).show();
+            }
+            @Override
+            public void onNothingSelected() { }
+        });
+
     }
 
     //Check Network working
@@ -365,24 +360,4 @@ public class MainActivity extends Activity {
         }
         return  isAvailable;
     }
-
-    private void AlertDialog(){
-        android.os.Handler handler = new android.os.Handler(Looper.getMainLooper());
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
-                alertDialog.setTitle("Confirm Delete...");
-                alertDialog.setMessage("Are you sure you want delete this?");
-                alertDialog.setIcon(R.drawable.ic_launcher);
-                alertDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getApplicationContext(), "You clicked on OK", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                alertDialog.show();
-            }
-        }, 100);
-    }
-
 }

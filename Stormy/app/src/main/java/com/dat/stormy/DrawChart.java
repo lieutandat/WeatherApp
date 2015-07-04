@@ -45,46 +45,34 @@ public class DrawChart{
         addData();
     }
 
-    private void addData(){
+    private void addData() {
         float max = mTemperatures[0];
         float min = mTemperatures[0];
         List date = new ArrayList<String>();
-        for(int i=0;i<mLabelTemperatures.length;i++)
-        {
+        for (int i = 0; i < mLabelTemperatures.length; i++) {
             date.add(mLabelTemperatures[i]);
         }
 
         List entries = new ArrayList<Entry>();
-        for(int i=0;i<mTemperatures.length;i++){
-            if(max<mTemperatures[i]) max = mTemperatures[i];
-            if(min>mTemperatures[i]) min = mTemperatures[i];
-            entries.add(new Entry(mTemperatures[i],i));
+        for (int i = 0; i < mTemperatures.length; i++) {
+            if (max < mTemperatures[i]) max = mTemperatures[i];
+            if (min > mTemperatures[i]) min = mTemperatures[i];
+            entries.add(new Entry(mTemperatures[i], i));
         }
 
         YAxis y1 = mLineChart.getAxisLeft();
         y1.setTextColor(Color.WHITE);
-        y1.setAxisMaxValue(max+5);
+        y1.setAxisMaxValue(max + 5);
         y1.setAxisMinValue(min - 5);
 
-        LineDataSet lineDataSet = new LineDataSet(entries,"Temperature");
+        LineDataSet lineDataSet = new LineDataSet(entries, "Temperature");
         lineDataSet = setupLine(lineDataSet);
 
-        LineData data = new LineData(date,lineDataSet);
+        LineData data = new LineData(date, lineDataSet);
         data.setValueTextColor(Color.WHITE);
 
         mLineChart.setData(data);
 
-        mLineChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-            @Override
-            public void onValueSelected(Entry entry, int i, Highlight highlight) {
-                LineData da = mLineChart.getLineData();
-
-                Toast.makeText(mContext,"data : entry "+entry.toString()+" i "+i,Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onNothingSelected() { }
-        });
     }
 
     private LineDataSet setupLine(LineDataSet lineDataSet){
@@ -105,7 +93,7 @@ public class DrawChart{
 
     private void SetUp(){
 
-       // mLineChart.setDescription("Customize line chart Description");
+        mLineChart.setDescription("Temperature for next 5 days");
         mLineChart.setNoDataTextDescription("No data for the moment");
 
         mLineChart.setHighlightEnabled(true);
@@ -138,8 +126,4 @@ public class DrawChart{
         YAxis y12 = mLineChart.getAxisRight();
         y12.setEnabled(false);
     }
-
-
-
-
 }
