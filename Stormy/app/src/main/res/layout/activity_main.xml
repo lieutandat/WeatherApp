@@ -156,13 +156,14 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
 
-    <RelativeLayout
+    <com.github.mikephil.charting.charts.LineChart
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:id="@+id/Chart"
         android:layout_below="@+id/LocationEditText"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/Chart">
-    </RelativeLayout>
+        android:layout_alignRight="@+id/locationLabel"
+        android:layout_alignEnd="@+id/locationLabel"
+        android:layout_marginTop="20dp">
+    </com.github.mikephil.charting.charts.LineChart>
 
 </RelativeLayout>

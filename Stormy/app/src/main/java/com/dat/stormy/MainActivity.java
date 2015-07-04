@@ -22,6 +22,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.LineChart;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -35,7 +37,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -63,7 +67,7 @@ public class MainActivity extends Activity {
     @InjectView(R.id.iconImageView) ImageView mIconImageView;
     @InjectView(R.id.LocationEditText) TextView mLocationValue;
     @InjectView(R.id.locationLabel) TextView mLocationlabel;
-    @InjectView(R.id.Chart)    RelativeLayout mChart;
+    @InjectView(R.id.Chart)   LineChart mChart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -195,19 +199,6 @@ public class MainActivity extends Activity {
             else{
 
             }
-           /*try {
-               final CurrentWeatherOpen weatherOpen = ExtractValueFromJson(s);
-               Log.d(TAG,"LoadWebBody : temper: "+weatherOpen.getTemperature());
-               runOnUiThread(new Runnable() {
-                   @Override
-                   public void run() {
-                       updateDisplayOpen(weatherOpen);
-                   }
-               });
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }*/
         }
     }
 
@@ -276,63 +267,9 @@ public class MainActivity extends Activity {
         return responseBody;
     }
 
-    //Display result
-    private void updateDisplay(CurrentWeather currentWeather) {
-               mTemperatureValue.setText(currentWeather.getTemperature() + "");
-               mTimeLabel.setText("At "+currentWeather.getFormattedTime()+" it will be");
-               mLocationlabel.setText(currentWeather.getTimeZone());
-               mHumidityLabel.setText(currentWeather.getHumidity() + "");
-               mPercipValue.setText(currentWeather.getPrecipChance() + "");
-               mSummaryLabel.setText(currentWeather.getSummary());
-               mIconImageView.setImageDrawable(getResources().getDrawable(currentWeather.getIconId()));
-    }
-
-    public CurrentWeatherOpen ExtractValueFromJson(String json) throws JSONException {
-        CurrentWeatherOpen currentWeatherOpen = new CurrentWeatherOpen();
-        JSONObject jsonObject = new JSONObject(json);
-        JSONObject sys = jsonObject.has("sys")?jsonObject.getJSONObject("sys"):null;
-        JSONArray weather = jsonObject.has("weather")? jsonObject.getJSONArray("weather"):null;
-        JSONObject weatherElement = weather!=null? weather.getJSONObject(0):null;
-        JSONObject main = jsonObject.has("main")? jsonObject.getJSONObject("main"):null;
-        JSONObject wind = jsonObject.has("wind")?jsonObject.getJSONObject("wind"):null;
-        JSONObject cloud = jsonObject.has("clouds")?jsonObject.getJSONObject("clouds"):null;
-        //JSONObject rain = jsonObject.getJSONObject("rain");
-
-        if(sys!=null) {
-            currentWeatherOpen.setSunRise(sys.getLong("sunrise"));
-            currentWeatherOpen.setSunSet (sys.getLong("sunset"));
-        }
-        if(weatherElement!=null) {
-            currentWeatherOpen.setWeatherDescription (weatherElement.getString("description"));
-            currentWeatherOpen.setWeatherIcon (weatherElement.getString("icon"));
-        }
-        if(main!=null){
-            currentWeatherOpen.setTemperature (main.getDouble("temp"));
-            currentWeatherOpen.setTemperatureMax (main.getDouble("temp_max"));
-            currentWeatherOpen.setTemperatureMin (main.getDouble("temp_min"));
-            currentWeatherOpen.setPressure (main.getDouble("pressure"));
-            currentWeatherOpen.setHumidity (main.getDouble("humidity"));
-//            currentWeatherOpen.setSeaLevel (main.getDouble("sea_level"));
-  //          currentWeatherOpen.setGroundLevel (main.getDouble("grnd_level"));
-        }
-        if(wind!=null) {
-            currentWeatherOpen.setWindSpeed (wind.getDouble("speed"));
-            currentWeatherOpen.setWindDeg (wind.getDouble("deg"));
-//            currentWeatherOpen.setWindGust (wind.getDouble("gust"));
-        }
-        if(cloud!=null)
-            currentWeatherOpen.setCloud (cloud.getDouble("all"));
-        //if(rain!=null)
-        //    currentWeatherOpen.setRain (rain.getDouble("3h"));
-        currentWeatherOpen.setTime ( jsonObject.getLong("dt"));
-        currentWeatherOpen.setLocation(jsonObject.getString("name"));
-        return currentWeatherOpen;
-    }
-
-
     private WeatherForFiveDay ExtractValueFromJsonFiveDay(String json) throws JSONException {
         WeatherForFiveDay weatherForFiveDay = new WeatherForFiveDay();
-        List dataSets = new ArrayList<FiveDayDataSet>();
+        List<FiveDayDataSet> dataSets = new ArrayList<FiveDayDataSet>();
 
         JSONObject jsonObject = new JSONObject(json);
 
@@ -390,27 +327,32 @@ public class MainActivity extends Activity {
         catch (Exception e){
             e.printStackTrace();
         }
-        weatherForFiveDay.setFiveDayDataSets(dataSets);
+        Date now = new Date();
+        List<FiveDayDataSet> dataSetsFormated = new ArrayList<FiveDayDataSet>();
+        for(int i=0;i<dataSets.size();i++){
+            if(Math.abs(dataSets.get(i).getTime().getHours() - now.getHours()) <= 1){
+                dataSetsFormated.add(dataSets.get(i));
+            }
+        }
+        weatherForFiveDay.setFiveDayDataSets(dataSetsFormated);
         return weatherForFiveDay;
     }
 
     private void CreateChart(WeatherForFiveDay weatherForFiveDay) {
-        List dataSets = weatherForFiveDay.getFiveDayDataSets();
-        int size = dataSets.size();
-        float[] temperatures = new float[5];
-        Date now = new Date();
-        int count=0;
-        for(int i=0;i<size;i++){
-            FiveDayDataSet temp = (FiveDayDataSet)dataSets.get(i);
-            if(Math.abs(temp.getTime().getHours() - now.getHours()) <= 1) {
-                temperatures[count++] = temp.getTemperature();
-                String current =mSummaryLabel.getText().toString();
-                mSummaryLabel.setText(current +temp.getTime().getDay()+" ");
-            }
-        }
-        DrawChart drawChart = new DrawChart(mChart,MainActivity.this,temperatures);
+        List<FiveDayDataSet> dataSets = weatherForFiveDay.getFiveDayDataSets();
 
-         drawChart.StartDraw();
+        float[] temperatures = new float[5];
+        String[] labelTemperatures = new String[5];
+
+        for(int i=0;i<dataSets.size();i++){
+            FiveDayDataSet temp = dataSets.get(i);
+            temperatures[i]= temp.getTemperature();
+            labelTemperatures[i] = temp.getTime().getDate()+"/"+(temp.getTime().getMonth()+1);
+            Log.d(TAG,"DrawChart: "+temperatures[i]+" " +labelTemperatures[i]);
+        }
+        DrawChart drawChart = new DrawChart(mChart,MainActivity.this,temperatures,labelTemperatures);
+
+        drawChart.StartDraw();
     }
 
     //Check Network working

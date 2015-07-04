@@ -26,16 +26,17 @@ import java.util.List;
  * Created by dat on 01/07/2015.
  */
 public class DrawChart{
-    private RelativeLayout mRelativeLayout;
     private Context mContext;
     private LineChart mLineChart;
 
     private float[] mTemperatures;
+    private String[] mLabelTemperatures;
 
-    public DrawChart(RelativeLayout relativeLayout, Context context, float[] temperatures){
-        this.mRelativeLayout = relativeLayout;
+    public DrawChart(LineChart lineChart, Context context, float[] temperatures, String[] labelTemperature){
+        this.mLineChart = lineChart;
         this.mContext = context;
         this.mTemperatures = temperatures;
+        this.mLabelTemperatures = labelTemperature;
     }
 
     public void StartDraw()
@@ -45,23 +46,28 @@ public class DrawChart{
     }
 
     private void addData(){
+        float max = mTemperatures[0];
+        float min = mTemperatures[0];
         List date = new ArrayList<String>();
-        date.add("Tue");
-        date.add("wen");
-        date.add("Thu");
-        date.add("Fri");
-        date.add("Sat");
+        for(int i=0;i<mLabelTemperatures.length;i++)
+        {
+            date.add(mLabelTemperatures[i]);
+        }
 
         List entries = new ArrayList<Entry>();
-        entries.add(new Entry(10,0));
-        entries.add(new Entry(20,1));
-        entries.add(new Entry(30,2));
-        entries.add(new Entry(40,3));
-        entries.add(new Entry(15,4));
+        for(int i=0;i<mTemperatures.length;i++){
+            if(max<mTemperatures[i]) max = mTemperatures[i];
+            if(min>mTemperatures[i]) min = mTemperatures[i];
+            entries.add(new Entry(mTemperatures[i],i));
+        }
 
-        LineDataSet lineDataSet = new LineDataSet(entries,"# of call");
+        YAxis y1 = mLineChart.getAxisLeft();
+        y1.setTextColor(Color.WHITE);
+        y1.setAxisMaxValue(max+5);
+        y1.setAxisMinValue(min - 5);
+
+        LineDataSet lineDataSet = new LineDataSet(entries,"Temperature");
         lineDataSet = setupLine(lineDataSet);
-
 
         LineData data = new LineData(date,lineDataSet);
         data.setValueTextColor(Color.WHITE);
@@ -71,6 +77,8 @@ public class DrawChart{
         mLineChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry entry, int i, Highlight highlight) {
+                LineData da = mLineChart.getLineData();
+
                 Toast.makeText(mContext,"data : entry "+entry.toString()+" i "+i,Toast.LENGTH_LONG).show();
             }
 
@@ -97,9 +105,6 @@ public class DrawChart{
 
     private void SetUp(){
 
-        mLineChart = new LineChart(mContext);
-        mRelativeLayout.addView(mLineChart);
-
        // mLineChart.setDescription("Customize line chart Description");
         mLineChart.setNoDataTextDescription("No data for the moment");
 
@@ -125,8 +130,6 @@ public class DrawChart{
 
         YAxis y1 = mLineChart.getAxisLeft();
         y1.setTextColor(Color.WHITE);
-        y1.setAxisMaxValue(40f);
-        y1.setAxisMinValue(-30f);
         y1.setDrawGridLines(true);
         y1.setStartAtZero(false);
         y1.setDrawLabels(false);
