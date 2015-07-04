@@ -31,7 +31,7 @@ public class location extends Activity {
     final String TAG = location.class.getSimpleName();
     EditText mLocation;
     Button mButtonSearch;
-    String lon, lat;
+    GetXml mGetXml = new GetXml();
     final String GET_LONG_LAT = "http://maps.googleapis.com/maps/api/geocode/json?address=%1$s&sensor=true";
     public final static String ADDRESS = "phonghoac";
 
@@ -81,53 +81,17 @@ public class location extends Activity {
     class LoadWebBody extends AsyncTask<String, Integer, String> {
         @Override
         protected String doInBackground(String... params) {
-            return getXmlFromUrl(params[0]);
+            String url = mGetXml.getXmlFromUrl(params[0]);
+            return url;
         }
         protected void onPostExecute(String s) {
             String address = GetLongLatFromAddress(s);
-            Intent intent = new Intent(location.this, MainActivity.class);
+            /*Intent intent = new Intent(location.this, MainActivity.class);
             intent.putExtra(ADDRESS, address);
-            startActivity(intent);
+            startActivity(intent);*/
+            Toast.makeText(getApplicationContext(),address,Toast.LENGTH_SHORT).show();
         }
     }
-
-    private String getXmlFromUrl(String urlString) {
-        Log.d(TAG, " getXml : url " + urlString);
-        String responseBody = "Wrong";
-        if (isNetworkAvailable()) {
-            DefaultHttpClient http = new DefaultHttpClient();
-            HttpGet httpMethod = new HttpGet();
-            try {
-                httpMethod.setURI(new URI(urlString));
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-            HttpResponse response = null;
-            try {
-                response = http.execute(httpMethod);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            int responseCode = response.getStatusLine().getStatusCode();
-            switch (responseCode) {
-                case 200:
-                    HttpEntity entity = response.getEntity();
-                    if (entity != null) {
-                        try {
-                            responseBody = EntityUtils.toString(entity);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    break;
-            }
-        } else {
-            Toast.makeText(location.this, "Network is not available!", Toast.LENGTH_LONG).show();
-        }
-        Log.d(TAG, " getXmlFromUrl : " + responseBody);
-        return responseBody;
-    }
-
     private boolean isNetworkAvailable() {
         ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();
@@ -137,4 +101,7 @@ public class location extends Activity {
         }
         return isAvailable;
     }
+
+
+
 }
