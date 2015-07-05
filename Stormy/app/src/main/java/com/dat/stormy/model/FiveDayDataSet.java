@@ -1,20 +1,18 @@
-package com.dat.stormy;
+package com.dat.stormy.model;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.dat.stormy.R;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Date.*;
 import java.util.TimeZone;
 
 /**
- * Created by dat on 26/06/2015.
- * api key = http://api.openweathermap.org/data/2.5/weather?lat=37.8267&lon=-122.423&units=metric
+ * Created by dat on 01/07/2015.
  */
-public class CurrentWeatherOpen {
-    private long  mSunRise;        //unix, UTC
-    private long  mSunSet;         //unix, UTC
+public class FiveDayDataSet {
 
     private String  mWeatherDescription;
     private String  mWeatherIcon;    //name of png file
@@ -34,37 +32,8 @@ public class CurrentWeatherOpen {
     private double   mCloud;          //% cloudiness
 
     private double  mRain;            //mm   Precipitation volume for last 3 hours
-    private long    mTime;           //~dt in Api unix, UTC    // do for weather in day, week
+    private Date    mTime;           //~dt in Api unix, UTC    // do for weather in day, week
 
-    private String  mLocation;
-
-
-    // for weather day API
-
-
-    public String getLocation() {
-        return mLocation;
-    }
-
-    public void setLocation(String location) {
-        mLocation = location;
-    }
-
-    public double getSunRise() {
-        return mSunRise;
-    }
-
-    public void setSunRise(long sunRise) {
-        mSunRise = sunRise;
-    }
-
-    public double getSunSet() {
-        return mSunSet;
-    }
-
-    public void setSunSet(long sunSet) {
-        mSunSet = sunSet;
-    }
 
     public String getWeatherDescription() {
         return mWeatherDescription;
@@ -218,15 +187,16 @@ public class CurrentWeatherOpen {
         mRain = rain;
     }
 
-    public String getTime() {
-        SimpleDateFormat formater = new SimpleDateFormat("h:mm a");
-        formater.setTimeZone(TimeZone.getTimeZone("unix, UTC"));
-        Date dateTime = new Date(mTime*1000);
-        String timeString = formater.format(dateTime);
-        return timeString;
+    public Date getTime() {
+        return  mTime;
     }
 
-    public void setTime(long time) {
-        mTime = time;
+    public void setTime(String time) throws ParseException {
+        SimpleDateFormat formater = new
+                SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        Date date = formater.parse(time);
+        mTime = date;
     }
 }
+

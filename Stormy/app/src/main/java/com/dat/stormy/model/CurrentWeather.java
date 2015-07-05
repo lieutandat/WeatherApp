@@ -1,4 +1,6 @@
-package com.dat.stormy;
+package com.dat.stormy.model;
+
+import com.dat.stormy.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

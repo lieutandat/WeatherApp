@@ -1,6 +1,5 @@
-package com.dat.stormy;
+package com.dat.stormy.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

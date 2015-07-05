@@ -14,12 +14,12 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name=".view.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".location"
+            android:name=".view.location"
             android:label="@string/title_activity_location" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

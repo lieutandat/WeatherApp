@@ -1,4 +1,4 @@
-package com.dat.stormy;
+package com.dat.stormy.model;
 
 import android.app.Activity;
 import android.content.Context;
@@ -87,7 +87,7 @@ public class DrawChart{
         lineDataSet.setFillColor(ColorTemplate.getHoloBlue());
         lineDataSet.setHighLightColor(Color.rgb(244,117,177));
         lineDataSet.setValueTextColor(Color.WHITE);
-        lineDataSet.setValueTextSize(10f);
+        lineDataSet.setValueTextSize(12f);
         return lineDataSet;
     }
 
@@ -103,10 +103,9 @@ public class DrawChart{
         mLineChart.setDrawGridBackground(false);
 
         mLineChart.setPinchZoom(true);
-        mLineChart.setBackgroundColor(Color.LTGRAY);
+        mLineChart.setBackgroundColor(Color.alpha(0));
 
         Legend legend = mLineChart.getLegend();
-
         //customize legend
         legend.setForm(Legend.LegendForm.LINE);
         legend.setTextColor(Color.WHITE);
@@ -115,6 +114,7 @@ public class DrawChart{
         x1.setTextColor(Color.WHITE);
         x1.setDrawGridLines(false);
         x1.setAvoidFirstLastClipping(true);
+        x1.setTextSize(12f);
 
         YAxis y1 = mLineChart.getAxisLeft();
         y1.setTextColor(Color.WHITE);
