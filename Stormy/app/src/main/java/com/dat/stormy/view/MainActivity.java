@@ -84,6 +84,7 @@ public class MainActivity extends Activity {
         }
 
         GetForeCast(latitude, longtitude);
+
     }
 
     //Get the Forecast from API

@@ -7,5 +7,7 @@
     <string name="error_title">Oops! Sorry!</string>
     <string name="error_ok_button_text">There was an error. Please try again.</string>
     <string name="title_activity_location">location</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 
 </resources>
