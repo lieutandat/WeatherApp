@@ -125,6 +125,7 @@ public class GetXml extends Activity{
 
     public String extractLongLatFromAddress(String json) {
         String outPut="";
+        
         try {
             JSONObject body = new JSONObject(json);
             JSONArray result = body.getJSONArray("results");
