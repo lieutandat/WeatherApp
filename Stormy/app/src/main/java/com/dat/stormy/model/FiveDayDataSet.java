@@ -2,6 +2,7 @@ package com.dat.stormy.model;
 
 import com.dat.stormy.R;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,7 +13,7 @@ import java.util.TimeZone;
 /**
  * Created by dat on 01/07/2015.
  */
-public class FiveDayDataSet {
+public class FiveDayDataSet implements Serializable{
 
     private String  mWeatherDescription;
     private String  mWeatherIcon;    //name of png file
@@ -40,7 +41,8 @@ public class FiveDayDataSet {
     }
 
     public void setWeatherDescription(String weatherDescription) {
-        mWeatherDescription = weatherDescription;
+        String des = Character.toString(weatherDescription.charAt(0)).toUpperCase()+weatherDescription.subSequence(1,weatherDescription.length());
+        mWeatherDescription = des;
     }
 
     public String getWeatherIcon() {
@@ -194,7 +196,6 @@ public class FiveDayDataSet {
     public void setTime(String time) throws ParseException {
         SimpleDateFormat formater = new
                 SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
         Date date = formater.parse(time);
         mTime = date;
     }

@@ -24,6 +24,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -34,11 +35,12 @@ import java.util.List;
 public class GetXml extends Activity{
     private Context mContext;
 
+    public final String GET_LONG_LAT = "http://maps.googleapis.com/maps/api/geocode/json?address=%1$s&sensor=true";
+    public final String FORECAST = "http://api.openweathermap.org/data/2.5/forecast?%1$s&units=metric";
+
     public GetXml(Context context){
         this.mContext = context;
     }
-    public final String GET_LONG_LAT = "http://maps.googleapis.com/maps/api/geocode/json?address=%1$s&sensor=true";
-    public final String FORECAST = "http://api.openweathermap.org/data/2.5/forecast?%1$s&units=metric";
 
     public boolean isNetworkAvailable() {
         ConnectivityManager manager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -159,6 +161,16 @@ public class GetXml extends Activity{
                         JSONObject object = jsonArray.getJSONObject(i);
                         FiveDayDataSet data = new FiveDayDataSet();
 
+                        if (object.has("dt_txt")) {
+                            String date = object.getString("dt_txt");
+                            SimpleDateFormat formater = new   SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            int hour = formater.parse(date).getHours();
+                            int nowHour = new Date().getHours();
+                            if(Math.abs(hour - nowHour) > 1)
+                                continue;
+                            else data.setTime(date);
+                        }
+
                         if (object.has("main")) {
                             JSONObject main = object.getJSONObject("main");
                             data.setTemperature(main.getDouble("temp"));
@@ -176,18 +188,19 @@ public class GetXml extends Activity{
                             data.setWeatherIcon(weather.getString("icon"));
                         }
                         if (object.has("clouds")) {
-                            data.setCloud(object.getJSONObject("clouds").getDouble("all"));
+                            if(object.getJSONObject("clouds").has("all"))
+                                data.setCloud(object.getJSONObject("clouds").getDouble("all"));
                         }
                         if (object.has("wind")) {
                             JSONObject wind = object.getJSONObject("wind");
-                            data.setWindSpeed(wind.getDouble("speed"));
+                            if(wind.has("speed"))
+                                data.setWindSpeed(wind.getDouble("speed"));
+                            if(wind.has("deg"))
                             data.setWindDeg(wind.getDouble("deg"));
                         }
                         if(object.has("rain")){
-                            data.setRain(object.getJSONObject("rain").getDouble("3h"));
-                        }
-                        if (object.has("dt_txt")) {
-                            data.setTime(object.getString("dt_txt"));
+                            if(object.getJSONObject("rain").has("3h"))
+                                data.setRain(object.getJSONObject("rain").getDouble("3h"));
                         }
                         dataSets.add(data);
                     }
@@ -197,14 +210,15 @@ public class GetXml extends Activity{
         catch (Exception e){
             e.printStackTrace();
         }
-        Date now = new Date();
+       /* int now = new Date().getHours();
         List<FiveDayDataSet> dataSetsFormated = new ArrayList<FiveDayDataSet>();
         for(int i=0;i<dataSets.size();i++){
-            if(Math.abs(dataSets.get(i).getTime().getHours() - now.getHours()) <= 1){
+            if(Math.abs(dataSets.get(i).getTime().getHours() - now) <= 1){
                 dataSetsFormated.add(dataSets.get(i));
             }
         }
-        weatherForFiveDay.setFiveDayDataSets(dataSetsFormated);
+        weatherForFiveDay.setFiveDayDataSets(dataSetsFormated);*/
+        weatherForFiveDay.setFiveDayDataSets(dataSets);
         return weatherForFiveDay;
     }
 

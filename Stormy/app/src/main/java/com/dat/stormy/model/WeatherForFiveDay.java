@@ -1,11 +1,16 @@
 package com.dat.stormy.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by dat on 01/07/2015.
  */
-public class WeatherForFiveDay {
+public class WeatherForFiveDay implements Serializable {
+
     //object -> city (name, country, coord, populcation)
     private String  mLocation;
     private String mCountry;

@@ -95,13 +95,14 @@ public class DrawChart{
 
         mLineChart.setDescription("Temperature for next 5 days");
         mLineChart.setNoDataTextDescription("No data for the moment");
+        mLineChart.setDescriptionColor(Color.WHITE);
 
         mLineChart.setHighlightEnabled(true);
         mLineChart.setTouchEnabled(true);
         mLineChart.setDragEnabled(true);
         mLineChart.setScaleEnabled(true);
         mLineChart.setDrawGridBackground(false);
-
+        mLineChart.setVisibleXRange(6);
         mLineChart.setPinchZoom(true);
         mLineChart.setBackgroundColor(Color.alpha(0));
 
