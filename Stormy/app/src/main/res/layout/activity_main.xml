@@ -9,7 +9,8 @@
                 tools:context=".MainActivity"
                 android:orientation="vertical"
                 android:weightSum="5"
-                android:background="#ff287aab">
+                android:background="#ff287aab"
+                android:id="@+id/MainActivityBackgroundLinear">
 
     <LinearLayout
         android:orientation="vertical"
@@ -26,7 +27,7 @@
             android:textSize="24sp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_gravity="center_horizontal"/>
 
         <TextView
@@ -37,13 +38,13 @@
             android:textColor="#80ffffff"
             android:layout_below="@+id/locationLabel"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_gravity="center_horizontal"/>
 
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="10dp">
 
             <TextView
                 android:layout_width="wrap_content"

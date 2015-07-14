@@ -10,23 +10,19 @@ import java.util.List;
 public class Locates implements Serializable {
     private List<Locate> mLocates;
 
-    public Locates(){
-        mLocates = new ArrayList<Locate>();
-    }
-
-    public void addLocate(Locate locate){
-        mLocates.add(locate);
-    }
-
-    public String[] getLocateName(){
-        String[] locateName = new String[mLocates.size()];
+    public List<String> getLocateName(){
+        List<String> locateName = new ArrayList<String>();
         for(int i=0;i<mLocates.size();i++){
-            locateName[i] = mLocates.get(i).getAddress();
+            locateName.add(mLocates.get(i).getAddress());
         }
         return locateName;
     }
 
-    public List<Locate> getLocateList(){
+    public List<Locate> getLocates(){
         return mLocates;
+    }
+
+    public void setLocates(List<Locate> locates){
+        mLocates = locates;
     }
 }

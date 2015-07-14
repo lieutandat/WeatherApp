@@ -32,13 +32,13 @@ import java.util.List;
 /**
  * Created by Phong on 04/07/2015.
  */
-public class GetXml extends Activity{
+public class JsonHtmlService extends Activity{
     private Context mContext;
 
     public final String GET_LONG_LAT = "http://maps.googleapis.com/maps/api/geocode/json?address=%1$s&sensor=true";
     public final String FORECAST = "http://api.openweathermap.org/data/2.5/forecast?%1$s&units=metric";
 
-    public GetXml(Context context){
+    public JsonHtmlService(Context context){
         this.mContext = context;
     }
 
@@ -123,22 +123,28 @@ public class GetXml extends Activity{
         return currentLocation[0];
     }
 
-    public String extractLongLatFromAddress(String json) {
-        String outPut="";
-        
-        try {
+    public Locates extractLongLatFromAddress(String json) {
+        List<Locate> locateList = new ArrayList<Locate>();
+        try{
             JSONObject body = new JSONObject(json);
             JSONArray result = body.getJSONArray("results");
-            JSONObject temp = result.getJSONObject(0);
-            JSONObject geo =temp.getJSONObject("geometry");
-            JSONObject location = geo.getJSONObject("location");
-            double lat = location.getDouble("lat");
-            double lng = location.getDouble("lng");
-            outPut = "lat="+lat+"&lon="+lng;
-        } catch (JSONException e) {
+            for(int i=0;i<result.length();i++){
+                JSONObject temp = result.getJSONObject(i);
+                JSONObject geo =temp.getJSONObject("geometry");
+                JSONObject location = geo.getJSONObject("location");
+                double lat = location.getDouble("lat");
+                double lng = location.getDouble("lng");
+                String address = temp.getString("formatted_address");
+                Locate locate = new Locate(address,lat,lng);
+                locateList.add(new Locate(address,lat,lng));
+            }
+        }
+        catch (JSONException e){
             e.printStackTrace();
         }
-        return outPut;
+        Locates locates = new Locates();
+        locates.setLocates(locateList);
+        return locates;
     }
 
     public WeatherForFiveDay ExtractValueFromJsonFiveDay(String json) throws JSONException {
@@ -211,14 +217,6 @@ public class GetXml extends Activity{
         catch (Exception e){
             e.printStackTrace();
         }
-       /* int now = new Date().getHours();
-        List<FiveDayDataSet> dataSetsFormated = new ArrayList<FiveDayDataSet>();
-        for(int i=0;i<dataSets.size();i++){
-            if(Math.abs(dataSets.get(i).getTime().getHours() - now) <= 1){
-                dataSetsFormated.add(dataSets.get(i));
-            }
-        }
-        weatherForFiveDay.setFiveDayDataSets(dataSetsFormated);*/
         weatherForFiveDay.setFiveDayDataSets(dataSets);
         return weatherForFiveDay;
     }

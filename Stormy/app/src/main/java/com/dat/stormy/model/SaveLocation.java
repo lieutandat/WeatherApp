@@ -2,28 +2,27 @@ package com.dat.stormy.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import com.google.gson.Gson;
 
 /**
  * Created by dat on 08/07/2015.
  */
 public class SaveLocation {
-    private String mKeyStore = "Location";
+    final private String mKeyStore = "DEFAULT_LOCATION";
     Context mContext;
+    SharedPreferences mSharedPreferences;
 
     public SaveLocation(Context context){
         this.mContext = context;
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
     }
 
-    public void saveLocation(String place){
-        SharedPreferences location = mContext.getApplicationContext().getSharedPreferences("KEYSTORED",Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = location.edit();
-
-        Set<String> set = location.getStringSet(mKeyStore,null);
+    public void saveLocation(Locate locate){
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+/*
+        Set<String> set = mLocation.getStringSet(mKeyStore,null);
         if(set==null){
             set = new HashSet<>();
             List<String> places = new ArrayList<String>();
@@ -33,14 +32,21 @@ public class SaveLocation {
         else {
             set.add(place);
         }
-        editor.putStringSet(mKeyStore,set);
+        editor.putStringSet(mKeyStore,set);*/
+        Gson gson = new Gson();
+        String json =  gson.toJson(locate);
+        editor.putString(mKeyStore,json);
         editor.commit();
     }
 
-    public  String[] getLocation(){
-        SharedPreferences location = mContext.getSharedPreferences("KEYSTORED",Context.MODE_PRIVATE);
-        Set<String> set = location.getStringSet(mKeyStore,null);
+    public  Locate getLocation(){
+    /*
+        Set<String> set = mLocation.getStringSet(mKeyStore,null);
         if(set==null) return null;
-        else return (String[]) set.toArray();
+        else return (String[]) set.toArray();*/
+        Gson gson = new Gson();
+        String json = mSharedPreferences.getString(mKeyStore,"");
+        Locate locate = gson.fromJson(json,Locate.class);
+        return  locate;
     }
 }
