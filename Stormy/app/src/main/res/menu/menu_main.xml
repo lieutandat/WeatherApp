@@ -6,4 +6,9 @@
           android:title="Set as default location"
           android:orderInCategory="100"
           app:showAsAction="never"/>
+	<item android:id="@+id/action_back"
+          android:title="Return Location Picker"
+          android:orderInCategory="100"
+          app:showAsAction="never"/>
+		  
 </menu>

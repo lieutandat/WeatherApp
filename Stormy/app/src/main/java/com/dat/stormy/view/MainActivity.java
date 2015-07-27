@@ -102,8 +102,10 @@ public class MainActivity extends ActionBarActivity {
                     }
                 });
                 alertDialog.show();
-
                 return true;
+			case R.id.action_back:
+				Intent intent = new Intent(this,location.class);
+				startActivity(intent);
             default:
                 return super.onOptionsItemSelected(item);
         }
