@@ -106,6 +106,7 @@ public class MainActivity extends ActionBarActivity {
 			case R.id.action_back:
 				Intent intent = new Intent(this,location.class);
 				startActivity(intent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
