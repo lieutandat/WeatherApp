@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:minWidth="250dp"
+                    android:minHeight="40dp"
+                    android:updatePeriodMillis="5000"
+                    android:previewImage="@drawable/example_appwidget_preview"
+                    android:initialLayout="@layout/weather_widget"
+                    android:resizeMode="horizontal"
+                    android:widgetCategory="home_screen|keyguard"
+                    android:initialKeyguardLayout="@layout/weather_widget">
+</appwidget-provider><!-- From: file:/E:/github/WeatherApp/Stormy/app/src/main/res/xml/weather_widget_info.xml -->

@@ -1,0 +1,50 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                tools:context="com.dat.stormy.view.location"
+    android:orientation="vertical"
+    android:background="#ff287aab"
+    android:onClick="setupUI">
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="6"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextLocation"
+            android:hint="Type location here"
+            android:text="Binh Duong"
+            android:textColor="#ff9ed7f9"
+            android:layout_weight="5"
+            android:layout_marginRight="10dp"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Go"
+            android:id="@+id/btnSearch"
+            android:background="#ff024770"
+            android:textColor="#ff9ed7f9"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/lstLocation"
+        android:layout_marginTop="50dp"/>
+</LinearLayout>
+<!-- From: file:/E:/github/WeatherApp/Stormy/app/src/main/res/layout/activity_location.xml -->

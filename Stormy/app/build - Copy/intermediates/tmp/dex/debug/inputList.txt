@@ -1,0 +1,8 @@
+E:\github\WeatherApp\Stormy\app\build\intermediates\classes\debug
+E:\github\WeatherApp\Stormy\app\build\intermediates\pre-dexed\debug\support-annotations-22.2.0-79752d4cf81191145e3180cef8e99e896ccba79e.jar
+E:\github\WeatherApp\Stormy\app\build\intermediates\pre-dexed\debug\butterknife-6.1.0-0b85f49aebb9f38c655d84dd63fb4c64dabbe006.jar
+E:\github\WeatherApp\Stormy\app\build\intermediates\pre-dexed\debug\gson-2.3.1-0526fd38da5dab3dcaa7a0462477d09a2887502d.jar
+E:\github\WeatherApp\Stormy\app\build\intermediates\pre-dexed\debug\internal_impl-22.2.0-c001eef06a36d696b91aad0347d7657f2bf78a2d.jar
+E:\github\WeatherApp\Stormy\app\build\intermediates\pre-dexed\debug\classes-15d0a5f2e89ce1be7805bf40452f2e2faf7497cb.jar
+E:\github\WeatherApp\Stormy\app\build\intermediates\pre-dexed\debug\classes-0132f07ab41bf173ac1208241a21026cdabdd2b3.jar
+E:\github\WeatherApp\Stormy\app\build\intermediates\pre-dexed\debug\mpandroidchartlibrary-2-1-0-faa14641b4c423f9cdaccf9571b419056a621d25.jar

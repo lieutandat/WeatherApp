@@ -1,0 +1,129 @@
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:weightSum="4"
+        android:padding="@dimen/widget_margin"
+        android:background="#00ffffff"
+        android:id="@+id/widgetLayout">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="3">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/WidgetWeatherIcon"
+                android:src="@drawable/scattered_clouds"
+                android:layout_weight="1"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="3"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="VN \\ Ho Chi Minh"
+                android:id="@+id/WidgetLocate"
+                android:layout_above="@+id/WidgetTemperature"
+                android:layout_centerHorizontal="true"
+                android:textColor="@android:color/white"
+                android:textSize="16dp"/>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0">
+
+                <TextView
+                    android:id="@+id/WidgetTemperature"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="100"
+                    android:textColor="#ffffff"
+                    android:textSize="24sp"
+                    android:textStyle="bold|italic"
+                    android:contentDescription="@string/appwidget_text"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="o"
+                    android:id="@+id/WidgetMetricSymboy"
+                    android:layout_gravity="right"
+                    android:textColor="@android:color/white"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@+id/WidgetTemperature"
+                    android:layout_toEndOf="@+id/WidgetTemperature"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="F"
+                    android:id="@+id/WidgetTemperatureMetric"
+                    android:textSize="20dp"
+                    android:textColor="@android:color/white"
+                    android:layout_alignBaseline="@+id/WidgetTemperature"
+                    android:layout_alignBottom="@+id/WidgetTemperature"
+                    android:layout_toRightOf="@+id/WidgetMetricSymboy"
+                    android:layout_toEndOf="@+id/WidgetMetricSymboy"
+                    android:layout_marginLeft="2dp"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:weightSum="3"
+                android:layout_weight="3">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Clear Sky cloudy"
+                    android:id="@+id/WidgetWeatherDescription"
+                    android:layout_weight="1"
+                    android:textSize="10dp"
+                    android:textColor="@android:color/white"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Humidity: 84%"
+                    android:id="@+id/WidgetHumidity"
+                    android:layout_weight="1"
+                    android:textSize="10dp"
+                    android:textColor="@android:color/white"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Rain 1.11mm"
+                    android:id="@+id/WidgetRain"
+                    android:layout_weight="1"
+                    android:textSize="10dp"
+                    android:textColor="@android:color/white"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout><!-- From: file:/E:/github/WeatherApp/Stormy/app/src/main/res/layout/weather_widget.xml -->
